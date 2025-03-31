@@ -6,6 +6,7 @@
     <div>
        Admin layout
     </div>
+    <router-view></router-view>
 </template>
 
 
