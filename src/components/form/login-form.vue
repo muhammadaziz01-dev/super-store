@@ -27,6 +27,7 @@ import {type LoginUserData} from "../../types"
 import User from "../../assets/icons/user.svg";
 import Open from "../../assets/icons/open.svg";
 import Clos from "../../assets/icons/clos.svg";
+import {setCookies } from "../../utils/cookie"
 
 const isOpen = ref(true);
 const router = useRouter()
@@ -41,11 +42,26 @@ const user: LoginUserData = reactive({
 const handelSubmitted = (): void => {
   if (user.login.trim() && user.password.trim()) {
     toast.success("Login successful!");
-    console.log("User login  : " + user.login  + " " +"User password" + user.password )
+    setCookies("role" , user.login.trim())
+    setCookies("token", user.password.trim())
+    console.log("User login  : " + user.login  + " " +"User password : " + user.password )
+    let role: string = user.login
     user.login = "";
-    user.password = "";
+    user.password = ""; 
     setTimeout(():void=>{
-        router.push('/profile-complete') 
+        if(role == "admin"){
+            router.push('/admin')  // redirect to admin dashboard
+        }else if (role == "super-admin"){
+            router.push('/super-admin')  // redirect to super-admin dashboard
+        }else {
+            toast.error("Invalid user or password!");
+            user.login = "";
+            user.password = "";
+            isOpen.value = false;
+            setTimeout(():void=>{
+                router.push('/')  // redirect to home page
+            },1500)
+        }
     },1500)
     
   } else {
@@ -71,7 +87,7 @@ const handelSubmitted = (): void => {
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
-  border: 2px solid transparent; /* Transparent border ishlatamiz */
+  border: 2px solid transparent;
   //   -webkit-border-radius: 30px;
   //   border-image: linear-gradient(to bottom , #FFF, #A6B0E7) 1;
   border-radius: 30px !important;
