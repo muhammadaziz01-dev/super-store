@@ -1,36 +1,29 @@
-
+<script setup lang="ts">
+import Container from "../../components/container/container/index.vue";
+import LoginForm from "../../components/form/login-form.vue";
+</script>
 
 <template>
-  <div>
-    <h2>Login</h2>
-    <form @submit.prevent="handleLogin">
-      <input v-model="username" placeholder="Username" required />
-      <input v-model="password" type="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
-  </div>
+  <section class="login"> 
+    <div class="login--wrapper">
+      <img
+        src="../../assets/images/login-img1.png"
+        class="login--wrapper--img"
+        alt="login img"
+      />
+      <img
+        src="../../assets/images/login-bg-icon.png"
+        class="login--wrapper--icon"
+        alt="login icon"
+      />
+
+      <Container>
+        <div class="login--wrapper--parent-form">
+          <LoginForm />
+        </div>
+      </Container>
+    </div>
+  </section>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-import Cookies from 'js-cookie';
-import { useRouter } from 'vue-router';
-
-const username = ref('');
-const password = ref('');
-const router = useRouter();
-
-const handleLogin = async () => {
-  // Backend login so‘rovini bajaramiz (simulyatsiya qilamiz)
-  const userData = { token: '123456', role: username.value === 'super' ? 'super-admin' : 'admin' };
-
-  Cookies.set('token', userData.token, { expires: 1 });
-  Cookies.set('role', userData.role, { expires: 1 });
-
-  if (userData.role === 'super-admin') {
-    router.push('/super-admin/dashboard');
-  } else {
-    router.push('/admin/dashboard');
-  }
-};
-</script>
+<style scoped lang="scss" src="./style.scss"></style>
